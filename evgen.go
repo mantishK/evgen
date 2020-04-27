@@ -38,7 +38,7 @@ func generateDaily(startAt time.Time, frequency, quantity int, endAt *time.Time)
 		if quantity != 0 {
 			return i <= quantity
 		} else {
-			return nextEvent.Before(*endAt)
+			return nextEvent.Before(*endAt) || nextEvent.Equal(*endAt)
 		}
 	}
 	for check() {
@@ -65,7 +65,7 @@ func generateWeekly(startAt time.Time, frequency int, dayOfWeek []int, quantity 
 		if quantity != 0 {
 			return i <= quantity
 		} else {
-			return nextDay.Before(*endAt)
+			return nextDay.Before(*endAt) || nextDay.Equal(*endAt)
 		}
 	}
 	for check() {
@@ -96,7 +96,7 @@ func generateMonthly(startAt time.Time, frequency, quantity int, endAt *time.Tim
 		if quantity != 0 {
 			return i <= quantity
 		} else {
-			return nextEvent.Before(*endAt)
+			return nextEvent.Before(*endAt) || nextEvent.Equal(*endAt)
 		}
 	}
 	for check() {
@@ -115,7 +115,7 @@ func generateYearly(startAt time.Time, frequency, quantity int, endAt *time.Time
 		if quantity != 0 {
 			return i <= quantity
 		} else {
-			return nextEvent.Before(*endAt)
+			return nextEvent.Before(*endAt) || nextEvent.Equal(*endAt)
 		}
 	}
 	for check() {

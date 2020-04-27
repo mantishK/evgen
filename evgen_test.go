@@ -1,6 +1,7 @@
 package evgen
 
 import (
+	"strconv"
 	"testing"
 	"time"
 )
@@ -28,7 +29,7 @@ func TestGenerate(t *testing.T) {
 	}{
 		{"daily", now, nil, 1, 1, nil, []time.Time{now}},
 		{"daily", now, nil, 2, 2, nil, []time.Time{now, now.AddDate(0, 0, 2)}},
-		{"daily", now, nil, 1, 0, daysLater(now, 3), []time.Time{now, *daysLater(now, 1), *daysLater(now, 2)}},
+		{"daily", now, nil, 1, 0, daysLater(now, 3), []time.Time{now, *daysLater(now, 1), *daysLater(now, 2), *daysLater(now, 3)}},
 		{"weekly", now, nil, 1, 2, nil, []time.Time{now, now.AddDate(0, 0, 7)}},
 		{"weekly", aDay, []int{0, 3}, 1, 4, nil, []time.Time{aDay, thisWednesday, nextSunday, nextWednesday}},
 		{"weekly", aDay, []int{0, 3}, 2, 4, nil, []time.Time{aDay, thisWednesday, nxtNxtSunday, nxtNxtWednesday}},
@@ -38,13 +39,15 @@ func TestGenerate(t *testing.T) {
 		{"monthly", now, nil, 2, 3, nil, []time.Time{now, now.AddDate(0, 2, 0), now.AddDate(0, 4, 0)}},
 	}
 
-	for _, ta := range tables {
+	for i, ta := range tables {
 		result, err := Generate(ta.repeatType, ta.startAt, ta.dayOfWeek, ta.frequency, ta.quantity, ta.endAt)
 		if err != nil {
-			t.Error("Event gneration failed with error: " + err.Error())
+			t.Error("Row " + strconv.Itoa(i) + ": Event gneration failed with error: " + err.Error())
+			continue
 		}
 		if len(result) != len(ta.result) {
-			t.Error("schedule failed to return correct events. Expected:", ta.result, " got:", result, "inputs:", ta)
+			t.Error("Row "+strconv.Itoa(i)+": Schedule failed to return correct events. \nExpected:", ta.result, " \ngot:", result, "\ninputs:", ta)
+			continue
 		}
 		for i := range result {
 			if !result[i].Equal(ta.result[i]) {
