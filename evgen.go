@@ -6,7 +6,7 @@ import (
 )
 
 func Generate(repeatType string, startAt time.Time, dayOfWeek []int, frequency int, quantity int, endAt *time.Time) ([]time.Time, error) {
-	if quantity == 0 && endAt == nil {
+	if repeatType != "once" && quantity == 0 && endAt == nil {
 		return nil, errors.New("Either quantity or endAt should be non zero")
 	}
 	switch repeatType {
